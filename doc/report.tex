@@ -1,0 +1,83 @@
+\documentclass[11pt,a4paper,notitlepage]{article}
+
+% PDF name of document
+\newcommand{\doctitlepdf}{Notes on PFOO simple powerflow solver}
+% Title of document
+\newcommand{\doctitle}{\doctitlepdf}
+% Author of document
+\newcommand{\docauthor}{Joel Goop}
+\newcommand{\docauthorpdf}{\docauthor}
+
+\input{packagescommands}
+\input{lstsettings_general}
+\renewcommand{\vec}[1]{\ensuremath{\boldsymbol{#1}}}
+
+\begin{document}
+\selectlanguage{english}
+
+\pagenumbering{alph}
+\setcounter{page}{1}
+
+% Titelsida och abstract
+\title{\doctitle}
+\author{\docauthor}
+\date{\today}
+\maketitle
+
+% Huvuddel
+\setdefaulthdr
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\section{Program description} % (fold)
+\label{sec:program_description}
+The \texttt{Python} program contains a set of classes designed to describe and solve power flow problems. The classes are contained in the file \texttt{pf\_classes.py}. The class \texttt{PowerSystem} describes the buses, lines, and transformers making up a power system. Transformers and lines are both described by the class \texttt{Line}, which contains info on series impedance, $R+iX$, and shunt susceptance, $B$, equally divided between the two ends of the line. The class \texttt{Bus} is designed to represent buses in the system. The attributes represented are voltage amplitude $|V|$, voltage angle $\delta$, generated real and reactive power $P_g$ and $Q_g$, real and reactive load $P_l$ and $Q_l$, minimum and maximum generated reactive power (currently not used in calculations) $Q_{g,\text{min}}$ and $Q_{g,\text{max}}$, as well as information on whether the bus is a slack bus, a voltage controlled bus, or neither.
+
+In order to solve the power flow problem described by an instance of the \texttt{PowerSystem} class, different solution methods are implemented in the subclasses of \texttt{PowerFlowSolver}. The currently implemented methods are: full Newton method (\texttt{Power\-Flow\-Full\-Newton\-Solver}), fast decoupled power flow (\texttt{Power\-Flow\-Fast\-Decoupled\-Solver}), and DC power flow (\texttt{Power\-FlowDCSolver}).
+% section program_description (end)
+
+\section{Usage} % (fold)
+\label{sec:usage}
+An example of usage can be found in the file \texttt{gso\_ex\_6\_9.py} (see Appendix~\ref{app:code}) which solves example 6.9 of \citep{glo2012}. To describe the system, lines, transformers, and buses have to be described, and a \texttt{PowerSystem} object must be created. Then a solver object from a selected solver class can be created (for some solvers, e.g. the full Newton solver, additional parameters such as tolerance and maximum number of iterations should be specified) and its \texttt{solve()} method can then be called.
+% section usage (end)
+
+% \begin{figure}[htp]%
+% 	\centering%
+% 	\includegraphics[width=0.95\textwidth]{fig/num_regs}%
+% 	\caption[]{Number of regions in solution with $\omega_i>0.0001$ as a function of $\alpha$, $\beta$, and $\gamma$.}%
+% 	\label{fig:num_regs}%
+% \end{figure}
+
+% \begin{figure}[htp]%
+% 	\centering%
+% 	\subfloat[Frontier curves obtained for different fixed values of $\alpha$, representing the weight of the penalty on high variance.]{%
+% 		\includegraphics[width=0.85\textwidth]{fig/frontiers_distance-output}%
+% 		\label{fig:fr_dist-out}%
+% 	}\\
+% 	\subfloat[Frontier curves obtained for different fixed values of $\beta$, representing the weight of the penalty on low output.]{%
+% 		\includegraphics[width=0.85\textwidth]{fig/frontiers_distance-stdev}%
+% 		\label{fig:fr_dist-std}%
+% 	}\\
+% 	\subfloat[Frontier curves obtained for different fixed values of $\gamma$, representing the weight of the penalty on large distances.]{%
+% 		\includegraphics[width=0.85\textwidth]{fig/frontiers_stdev-output}%
+% 		\label{fig:fr_std-out}%
+% 	}%
+% 	\caption[]{Figures representing the efficient frontier by showing the trade-offs between two objectives, by varying two of the weight parameters, for different fixed values of the third parameter. $\alpha$ is fixed in \subref{fig:fr_dist-out}, $\beta$ is fixed in \subref{fig:fr_dist-std}, and $\gamma$ is fixed in \subref{fig:fr_std-out}.}%
+% 	\label{fig:frontiers}%
+% \end{figure}
+
+\clearpage
+\newpage
+\addcontentsline{toc}{chapter}{\numberline{}References}
+\bibliography{references}
+
+\clearpage
+\newpage
+\appendix
+\input{lstsettings_python}
+\section{Code}\label{app:code}
+\lstinputlisting{../pf_classes.py}
+\lstinputlisting{../gso_ex_6_9.py}
+
+\end{document}
+% PDF author of document
